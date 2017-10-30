@@ -1,0 +1,31 @@
+{
+    "name": "from-package-to-terminal",
+    "version": "1.0.0",
+    "description": "Parses your package json files and returns the npm commands that will be needed to install the dependencies.",
+    "main": "index.js",
+    "scripts": {
+        "test": "jasmine"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/gitfaf/from-package-to-terminal.git"
+    },
+    "keywords": [],
+    "author": "Git Faf <git.faf@gmail.com>",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/gitfaf/from-package-to-terminal/issues"
+    },
+    "homepage": "https://github.com/gitfaf/from-package-to-terminal#readme",
+    "devDependencies": {
+        "eslint-config-standard": "^10.2.1",
+        "eslint-plugin-import": "^2.8.0",
+        "eslint-plugin-node": "^5.2.1",
+        "eslint-plugin-promise": "^3.6.0",
+        "eslint-plugin-standard": "^3.0.1",
+        "jasmine": "^2.8.0"
+    },
+    "dependencies": {
+        "node-path-choice": "^1.0.2"
+    }
+}
