@@ -1,47 +1,47 @@
 require('node-path-choice').blatant(__dirname)
 const fs = require('fs')
 
-function dependenciesLoose(parsedJson) {
+function dependenciesLoose (parsedJson) {
     if (!parsedJson.dependencies) throw new Error('dependencies do not exist!')
     return Object.keys(parsedJson.dependencies)
 }
 
-function devDependenciesLoose(parsedJson) {
+function devDependenciesLoose (parsedJson) {
     if (!parsedJson.devDependencies) throw new Error('devDependencies do not exist!')
     return Object.keys(parsedJson.devDependencies)
 }
 
-function dependenciesStrict(parsedJson) {
+function dependenciesStrict (parsedJson) {
     const depArray = dependenciesLoose(parsedJson)
-    return depArray.map(name => name + '@' + parsedJson.dependencies[name])
+    return depArray.map(name => [name, parsedJson.dependencies[name]].join('@'))
 }
 
-function devDependenciesStrict(parsedJson) {
+function devDependenciesStrict (parsedJson) {
     const depArray = devDependenciesLoose(parsedJson)
-    return depArray.map(name => name + '@' + parsedJson.devDependencies[name])
+    return depArray.map(name => [name, parsedJson.devDependencies[name]].join('@'))
 }
 
-function dependenciesLooseCommand(parsedJson) {
+function dependenciesLooseCommand (parsedJson) {
     const depArray = dependenciesLoose(parsedJson)
-    return depArray.reduce((concated, current) => concated + ' ' + current, 'npm i -S')
+    return depArray.reduce((command, dep) => [command, dep].join(' '), 'npm i -S')
 }
 
-function dependenciesStrictCommand(parsedJson) {
+function dependenciesStrictCommand (parsedJson) {
     const depArray = dependenciesStrict(parsedJson)
-    return depArray.reduce((concated, current) => concated + ' ' + current, 'npm i -S')
+    return depArray.reduce((command, dep) => [command, dep].join(' '), 'npm i -S')
 }
 
-function devDependenciesLooseCommand(parsedJson) {
+function devDependenciesLooseCommand (parsedJson) {
     const depArray = devDependenciesLoose(parsedJson)
-    return depArray.reduce((concated, current) => concated + ' ' + current, 'npm i -D')
+    return depArray.reduce((command, dep) => [command, dep].join(' '), 'npm i -D')
 }
 
-function devDependenciesStrictCommand(parsedJson) {
+function devDependenciesStrictCommand (parsedJson) {
     const depArray = devDependenciesStrict(parsedJson)
-    return depArray.reduce((concated, current) => concated + ' ' + current, 'npm i -D')
+    return depArray.reduce((command, dep) => [command, dep].join(' '), 'npm i -D')
 }
 
-function get(filename) {
+function get (filename, callback) {
     const data = fs.readFileSync(filename)
     const parsedJson = JSON.parse(data)
     const out = {}
@@ -64,6 +64,9 @@ function get(filename) {
                 strict: devDependenciesStrictCommand(parsedJson)
             }
         }
+    }
+    if (callback && typeof callback === 'function') {
+        callback(out)
     }
     return out
 }
